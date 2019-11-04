@@ -19,9 +19,12 @@ app.set("view engine", "handlebars");
 app.set('index', __dirname + '/views');
 
 // If deployed, use the deployed database. Otherwise use the local mongoHeadlines database
-var MONGODB_URI = process.env.MONGODB_URI || "mongodb://localhost/mongoHeadlines";
+// var MONGODB_URI = process.env.MONGODB_URI
 
-mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+// mongoose.connect(MONGODB_URI, { useNewUrlParser: true });
+
+mongoose.connect("mongodb+srv://user1:Password123@americannik-dv6zc.mongodb.net/scrape?retryWrites=true&w=majority", { useNewUrlParser: true });
+
 var results = [];
 
 // Start routes here...
@@ -75,10 +78,10 @@ app.put("/update/:id", function (req, res) {
         }
     });
 });
-app.put("/unsave/:id", function(req, res) {
+app.put("/unsave/:id", function (req, res) {
     console.log("XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX")
     console.log(req.body)
-    db.Article.updateOne({ _id: req.params.id }, { $set: { saved: false }}, function(err, result) {
+    db.Article.updateOne({ _id: req.params.id }, { $set: { saved: false } }, function (err, result) {
         if (result.changedRows == 0) {
             return res.status(404).end();
         } else {
@@ -87,18 +90,18 @@ app.put("/unsave/:id", function(req, res) {
     })
 })
 
-app.put("/newnote/:id", function(req, res) {
+app.put("/newnote/:id", function (req, res) {
     console.log("**********************************")
     console.log(req.body)
     console.log(req.body._id);
     console.log(req.body.note);
-    db.Article.updateOne({ _id: req.body._id }, { $push: { note: req.body.note }}, function(err, result) {
+    db.Article.updateOne({ _id: req.body._id }, { $push: { note: req.body.note } }, function (err, result) {
         console.log(result)
         if (result.changedRows == 0) {
             return res.status(404).end();
         } else {
             res.status(200).end();
-        } 
+        }
     })
 })
 
